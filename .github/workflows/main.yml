@@ -19,7 +19,7 @@ jobs:
       uses: sudosubin/git-clone-action@v1.0.1
       with:
         # Repository owner and name. Ex: sudosubin/git-clone-action
-        repository: https://github.com/Jon2G/Kit.git
+        repository: https://github.com/Jon2G/Kit
         # Relative path from current directory, where to clone.
         path: ../# optional
     
