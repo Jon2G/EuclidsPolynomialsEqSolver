@@ -21,7 +21,8 @@ jobs:
         # Repository owner and name. Ex: sudosubin/git-clone-action
         repository: Jon2G/Kit
         # Relative path from current directory, where to clone.
-        path: ../# optional
+        path: ./../Kit
+        # optional
     
     # sets up .NET Core SDK 3.1
     - name: Setup .NET Core SDK
