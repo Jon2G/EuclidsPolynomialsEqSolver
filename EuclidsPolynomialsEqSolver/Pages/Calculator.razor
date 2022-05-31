@@ -1,10 +1,130 @@
 ﻿@page "/"
 @page "/calculator"
+@using DocumentFormat.OpenXml.Bibliography
 
-<PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<PageTitle>Calculator</PageTitle>
 
-Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<MudPaper Class="pa-4">
+    <MudForm @bind-IsValid="@isValid" @ref="form">
+
+        <MudTextField T="string" Label="g(x)"
+                      Required="true"
+                      @bind-Value="Gx"
+                      Placeholder="x^10 + 2x^1 + 1 + ..."
+                      Variant="Variant.Outlined"
+                      Validation="@(new Func<string, IEnumerable<string>>(ValidatePolynom))"
+                      RequiredError="Debe ingresar un polinomio ecuación válido para g(x)" />
+
+        <MudTextField T="string" Label="f(x)"
+                      Required="true"
+                      @bind-Value="Hx"
+                      Placeholder="x^10 + 2x^1 + 1 + ..."
+                      Variant="Variant.Outlined"
+                      Validation="@(new Func<string, IEnumerable<string>>(ValidatePolynom))"
+                      RequiredError="Debe ingresar un polinomio ecuación válido para g(x)" />
+        <div style="height: 20px" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true"
+                   StartIcon="@Icons.Material.Filled.Calculate" OnClick="@Calculate">Calcular</MudButton>
+        <MudButton Variant="Variant.Filled" DisableElevation="true"
+                   OnClick="@Clear"
+                   StartIcon="@Icons.Material.Filled.RestoreFromTrash">Limpiar</MudButton>
+
+    </MudForm>
+</MudPaper>
+@if (Solution is { } sol)
+{
+    <MudPaper Class="pa-4">
+        <h5>Teniendo los siguientes polinomios en Z(^2)</h5>
+        <p>@sol.Hx</p>
+        <p>@sol.Dx</p>
+        <h5>Calcular</h5>
+        <p>d(x)=gcd(g(x), h(x), s(x) y t(x)</p>
+        @foreach (string step in sol.Steps)
+        {
+
+        }
+    </MudPaper>
+}
+
+
+
+@code {
+
+    PolynomialEq gx { get; set; } = new PolynomialEq('g',
+        new XTerm(10),
+        new XTerm(9),
+        new XTerm(8),
+        new XTerm(6),
+        new XTerm(5),
+        new XTerm(4),
+        XTerm.One);
+
+    PolynomialEq hx { get; set; } = new PolynomialEq('h',
+        new XTerm(9),
+        new XTerm(6),
+        new XTerm(5),
+        new XTerm(3),
+        new XTerm(2),
+        XTerm.One);
+
+    ExtendedEuclides? Solution;
+
+    string Gx
+    {
+        get => gx.IsZero ? "" : gx.ToString(false);
+        set
+        {
+            gx = new PolynomialEq('g');
+            if (PolynomialEq.Parse(value, out PolynomialEq eq))
+            {
+                gx = eq.SetLetter('g');
+            }
+        }
+    }
+    string Hx
+    {
+        get => hx.IsZero ? "" : hx.ToString(false);
+        set
+        {
+            hx = new PolynomialEq('h');
+            if (PolynomialEq.Parse(value, out PolynomialEq eq))
+            {
+                hx = eq.SetLetter('h');
+            }
+        }
+    }
+
+    MudForm form;
+    bool isValid;
+
+    private IEnumerable<string> ValidatePolynom(string value)
+    {
+        if (!PolynomialEq.Parse(value, out _))
+        {
+            yield return "El polinomio no es válido";
+            yield break;
+        }
+    }
+
+
+    private async Task Clear()
+    {
+        this.gx = new PolynomialEq('g');
+        this.hx = new PolynomialEq('h');
+        Solution = null;
+        await form.Validate();
+    }
+    private async Task Calculate()
+    {
+        await form.Validate();
+        if (!isValid)
+        {
+            return;
+        }
+        Solution = new ExtendedEuclides(gx, hx);
+        Solution.Solve();
+    }
+
+}

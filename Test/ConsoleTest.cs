@@ -4,6 +4,23 @@ namespace EuclidsPolynomialsEqSolver
 {
     public static class ConsoleTest
     {
+        public static void Parse()
+        {
+            string value = "x^12+x^9+x^8+x^6+x^5+x^4+1";
+            PolynomialEq.Parse(value, out PolynomialEq eq);
+            Console.WriteLine(value);
+            Console.WriteLine(eq.ToString());
+        }
+
+        public static void Run2()
+        {
+            PolynomialEq.Parse("x^12+x^9+x^8+x^6+x^5+x^4+1", out PolynomialEq gx);
+            PolynomialEq.Parse("x^ 8+ x^6+x^ 5+x ^3 +x^ 2+1", out PolynomialEq hx);
+
+
+            ExtendedEuclides solution = new ExtendedEuclides(gx, hx);
+            solution.Solve();
+        }
         public static void Run()
         {
             PolynomialEq gx = new PolynomialEq('g',

@@ -10,8 +10,10 @@
         public PolynomialEq Dx;
         public PolynomialEq Sx;
         public PolynomialEq Tx;
+        public readonly List<string> Steps;
         public ExtendedEuclides(PolynomialEq gx, PolynomialEq hx)
         {
+            this.Steps = new List<string>();
             this.Gx = gx; //debe ser el de mayor grado
             this.Hx = hx;
             Console.WriteLine(Gx);

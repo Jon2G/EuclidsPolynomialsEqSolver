@@ -2,6 +2,8 @@
 
 using EuclidsPolynomialsEqSolver;
 
-ConsoleTest.Run();
+ConsoleTest.Run2();
+//ConsoleTest.Run();
+//ConsoleTest.Parse();
 //ConsoleTest.Multitply();//
 //ConsoleTest.Division();

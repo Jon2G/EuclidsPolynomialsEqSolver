@@ -1,6 +1,8 @@
 ﻿using Kit;
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
+
 namespace DiscreteMaths
 {
     [DebuggerDisplay("{ToString()},Count = {Count}")]
@@ -9,6 +11,11 @@ namespace DiscreteMaths
         public char Letter { get; set; }
         public bool IsNotZero => !IsZero;
         public bool IsZero => this.All(x => x.IsZero);
+
+        public static readonly Regex EquationExpression = new Regex(@"(?<Equation>(?<NumericTerm>(?<Sign>\+|\-)(?<Value>\d+))|(?<XTerm>(?<Sign>\+|\-)?(?<Value>\d)?x(\^(?<Exponent>\d+))?))+");
+        public static readonly Regex NumericTermExpression = new Regex(@"(?<NumericTerm>(?<Sign>\+|\-)(?<Value>\d+))");
+        public static readonly Regex XTermExpression = new Regex(@"(?<XTerm>(?<Sign>\+|\-)?(?<Value>\d)?x(\^(?<Exponent>\d+))?)");
+
         public PolynomialEq(char letter, params XTerm[] xTerms)
         {
             SetLetter(letter);
@@ -181,9 +188,10 @@ namespace DiscreteMaths
             this.Add(sorted);
             return this;
         }
-        public override string ToString()
+
+        public string ToString(bool addLetter)
         {
-            StringBuilder sb = new StringBuilder($"{Letter}(x)=");
+            StringBuilder sb = new StringBuilder(addLetter ? $"{Letter}(x)=" : "");
             if (Count <= 0)
             {
                 return sb.Append("0").ToString();
@@ -202,11 +210,67 @@ namespace DiscreteMaths
             return sb.RemoveLast().ToString();
         }
 
+        public override string ToString() => ToString(true);
+
         public PolynomialEq Clone()
         {
             return new PolynomialEq(this.Letter, this.ToArray());
         }
 
         object ICloneable.Clone() => this.Clone();
+
+        public static bool Parse(string value, out PolynomialEq polynomialEq)
+        {
+            polynomialEq = new PolynomialEq('p');
+            value = value?.Trim()?.ToLower()?.Replace(" ", "");
+            if (string.IsNullOrEmpty(value)) return false;
+            Match match = EquationExpression.Match(value);
+            if (!match.Success)
+            {
+                return false;
+            }
+            Group equationGroup = match.Groups["Equation"];
+            foreach (Capture capture in equationGroup.Captures)
+            {
+                int numericValue = 1;
+                int exponent = 0;
+                match = NumericTermExpression.Match(capture.Value);
+
+                Group s, v;
+
+                if (match.Success)
+                {
+                    v = match.Groups["Value"];
+                    if (!string.IsNullOrEmpty(v.Value))
+                    {
+                        numericValue = int.Parse(v.Value);
+                    }
+                }
+                else
+                {
+                    match = XTermExpression.Match(capture.Value);
+                    if (!match.Success) return false;
+
+                    v = match.Groups["Value"];
+                    if (!string.IsNullOrEmpty(v.Value))
+                    {
+                        numericValue = int.Parse(v.Value);
+                    }
+                    var e = match.Groups["Exponent"];
+                    if (!string.IsNullOrEmpty(e.Value))
+                    {
+                        exponent = int.Parse(e.Value);
+                    }
+                }
+                s = match.Groups["Sign"];
+                if (s.Value == "-")
+                {
+                    numericValue = -1 * numericValue;
+                }
+                XTerm term = new XTerm(exponent, numericValue);
+                polynomialEq.Add(term);
+            }
+            return true;
+        }
     }
 }

@@ -7,11 +7,19 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">MISTI</a>
         </div>
 
-        <article class="content px-4">
+        <MudMainContent>
+            <MudContainer MaxWidth="MaxWidth.Medium">
+                @Body
+            </MudContainer>
+        </MudMainContent>
+@*        <article class="content px-4">
             @Body
-        </article>
+        </article>*@
     </main>
+    <MudThemeProvider/>
+    <MudDialogProvider/>
+    <MudSnackbarProvider/>
 </div>
