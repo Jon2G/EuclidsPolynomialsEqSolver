@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Kit\Kit\Kit.csproj" />
-    <ProjectReference Include="DiscreteMaths\DiscreteMaths.csproj" />
+    <ProjectReference Include="..\DiscreteMaths\DiscreteMaths.csproj" />
   </ItemGroup>
 
 </Project>
