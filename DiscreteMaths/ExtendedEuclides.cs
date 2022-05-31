@@ -20,6 +20,10 @@
             Console.WriteLine(Hx);
         }
 
+        private void AddBoldSteps(params string[] steps)
+        {
+            Steps.AddRange(steps.Select(x => $"<i><b>{x}</b></i>"));
+        }
         private void AddSteps(params string[] steps)
         {
             Steps.AddRange(steps);
@@ -36,34 +40,34 @@
             AddSteps(s2.ToString(), s1.ToString(), t2.ToString(), t1.ToString());
             while (hx.IsNotZero)
             {
-                AddSteps($"Teniendo que ({hx}) es diferente de cero");
+                AddBoldSteps($"Teniendo que ({hx}) es diferente de cero");
                 //9
-                AddSteps($"Dividimos {gx} entre {hx}");
+                AddBoldSteps($"Dividimos {gx} entre {hx}");
                 AddSteps($"<div>\n<p style=\"margin: 0;\">{gx.ToString()}</p>\n<div style=\"background: black;height: 1px;width: 200px;margin: 0;\"></div>\n<p>{hx.ToString()}</p>\n</div>");
                 PolynomialDivisionResult qxDiv = gx / hx;
                 PolynomialEq qx = qxDiv.Result.Mod().SetLetter('q');
                 PolynomialEq rx = qxDiv.Remainder.Mod().SetLetter('r');
-                AddSteps("Resultado de la división:", qx.ToString(), "Resusido de la división:", rx.ToString());
+                AddBoldSteps("Resultado de la división:", qx.ToString(), "Resusido de la división:", rx.ToString());
                 //10
-                AddSteps("Hacemos a sx=(s2 - qx * s1)", $"sx=({s2}-({qx}*{s1}))");
+                AddBoldSteps("Hacemos a sx=(s2 - qx * s1)", $"sx=({s2}-({qx}*{s1}))");
                 PolynomialEq sx = (s2 - (qx * s1)).Mod().SetLetter('s');
                 AddSteps(sx.ToString());
                 PolynomialEq tx = (t2 - (qx * t1)).Mod().SetLetter('t');
-                AddSteps("Hacemos a tx=(s2 - qx * s1)", $"tx=({t2}-({qx}*{t1}))");
+                AddBoldSteps("Hacemos a tx=(s2 - qx * s1)", $"tx=({t2}-({qx}*{t1}))");
                 //11
-                AddSteps("Hacemos a gx = hx y hx = rx");
+                AddBoldSteps("Hacemos a gx = hx y hx = rx");
                 gx = hx.Clone().SetLetter('g');
                 hx = rx.Clone().SetLetter('h');
                 AddSteps(gx.ToString(), hx.ToString());
                 //12
-                AddSteps("Hacemos a s2 = s1 , s1=sx, t2=t1, t1 = tx");
+                AddBoldSteps("Hacemos a s2 = s1 , s1=sx, t2=t1, t1 = tx");
                 s2 = s1.Clone().SetLetter("s2");
                 s1 = sx.Clone().SetLetter("s1");
                 t2 = t1.Clone().SetLetter("t2");
                 t1 = tx.Clone().SetLetter("t1");
                 AddSteps(s2.ToString(), s1.ToString(), t2.ToString(), t1.ToString());
             }
-            AddSteps($"{hx} es cero por lo tanto hemos terminado ...");
+            AddBoldSteps($"{hx} es cero por lo tanto hemos terminado ...");
             //14
             Dx = gx;
             Sx = s2;
