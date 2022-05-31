@@ -2,7 +2,11 @@
 @page "/calculator"
 @using DocumentFormat.OpenXml.Bibliography
 
-
+<style>
+    p {
+        font-size: 16px;
+    }
+</style>
 <PageTitle>Calculator</PageTitle>
 
 
@@ -43,8 +47,19 @@
         <p>d(x)=gcd(g(x), h(x), s(x) y t(x)</p>
         @foreach (string step in sol.Steps)
         {
-
+            MarkupString ms = (MarkupString)step;
+            <p>@ms</p>
         }
+        <MudCard Class="pa-5" Elevation="5" Style="background-color: aliceblue">
+            <MudCardHeader>
+                <h5>Resultado</h5>
+            </MudCardHeader>
+            <p>@sol.Dx</p>
+            <p>@sol.Hx</p>
+            <p>@sol.Sx</p>
+            <p>@sol.Tx</p>
+        </MudCard>
+
     </MudPaper>
 }
 

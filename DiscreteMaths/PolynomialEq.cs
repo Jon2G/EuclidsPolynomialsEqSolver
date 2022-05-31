@@ -8,7 +8,7 @@ namespace DiscreteMaths
     [DebuggerDisplay("{ToString()},Count = {Count}")]
     public class PolynomialEq : List<XTerm>, ICloneable<PolynomialEq>
     {
-        public char Letter { get; set; }
+        public string Letter { get; set; }
         public bool IsNotZero => !IsZero;
         public bool IsZero => this.All(x => x.IsZero);
 
@@ -16,14 +16,19 @@ namespace DiscreteMaths
         public static readonly Regex NumericTermExpression = new Regex(@"(?<NumericTerm>(?<Sign>\+|\-)(?<Value>\d+))");
         public static readonly Regex XTermExpression = new Regex(@"(?<XTerm>(?<Sign>\+|\-)?(?<Value>\d)?x(\^(?<Exponent>\d+))?)");
 
-        public PolynomialEq(char letter, params XTerm[] xTerms)
+        public PolynomialEq(string letter, params XTerm[] xTerms)
         {
             SetLetter(letter);
             if (xTerms?.Any() ?? false)
                 Add(xTerms);
         }
+        public PolynomialEq(char letter, params XTerm[] xTerms) : this(letter.ToString(), xTerms)
+        {
 
-        public PolynomialEq SetLetter(char letter)
+        }
+
+        public PolynomialEq SetLetter(char letter) => this.SetLetter(letter.ToString());
+        public PolynomialEq SetLetter(string letter)
         {
             Letter = letter;
             return this;
