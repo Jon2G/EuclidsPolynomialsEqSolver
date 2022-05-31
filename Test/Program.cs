@@ -2,5 +2,6 @@
 
 using EuclidsPolynomialsEqSolver;
 
-Console.WriteLine("Hello, World!");
 ConsoleTest.Run();
+//ConsoleTest.Multitply();//
+//ConsoleTest.Division();
