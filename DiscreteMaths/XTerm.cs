@@ -62,7 +62,7 @@
                     {
                         if (Unitary)
                         {
-                            text = $"x^{Exponent}";
+                            text = $"x^{{{Exponent}}}";
                         }
                         else if (Exponent == 1)
                         {
@@ -70,7 +70,7 @@
                         }
                         else
                         {
-                            text = $"{Math.Abs(Value)}x^{Exponent}";
+                            text = $"{Math.Abs(Value)}x^{{{Exponent}}}";
                         }
                         break;
                     }

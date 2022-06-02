@@ -1,4 +1,5 @@
 ﻿using Kit;
+using Microsoft.AspNetCore.Components;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -216,7 +217,7 @@ namespace DiscreteMaths
         }
 
         public override string ToString() => ToString(true);
-
+        public MarkupString ToLatexString(bool addLetter = true) => (MarkupString)$"$${ToString(addLetter)}$$";
         public PolynomialEq Clone()
         {
             return new PolynomialEq(this.Letter, this.ToArray());

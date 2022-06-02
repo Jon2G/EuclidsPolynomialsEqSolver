@@ -1,30 +1,29 @@
 ﻿@page "/"
 @page "/calculator"
-@using DocumentFormat.OpenXml.Bibliography
-
+@inherits MathJaxBlazor.MathJaxContentComponent
 
 <PageTitle>Calculator</PageTitle>
 
-<h4>Algoritmo extendido de Euclides para polinomios de orden Z(^2)</h4>
+<h4>Algoritmo extendido de Euclides para polinomios de orden $$\mathbb{Z}_2$$</h4>
 
 <MudPaper Class="pa-4">
     <MudForm @bind-IsValid="@isValid" @ref="form">
 
-        <MudTextField T="string" Label="g(x)"
+        <MudTextField T="string" Label="$$G(x)$$"
                       Required="true"
                       @bind-Value="Gx"
                       Placeholder="x^10 + 2x^1 + 1 + ..."
                       Variant="Variant.Outlined"
                       Validation="@(new Func<string, IEnumerable<string>>(ValidatePolynom))"
-                      RequiredError="Debe ingresar un polinomio ecuación válido para g(x)" />
+                      RequiredError="Debe ingresar un polinomio ecuación válido para $$G(x)$$" />
 
-        <MudTextField T="string" Label="f(x)"
+        <MudTextField T="string" Label="$$F(x)$$"
                       Required="true"
                       @bind-Value="Hx"
                       Placeholder="x^10 + 2x^1 + 1 + ..."
                       Variant="Variant.Outlined"
                       Validation="@(new Func<string, IEnumerable<string>>(ValidatePolynom))"
-                      RequiredError="Debe ingresar un polinomio ecuación válido para g(x)" />
+                      RequiredError="Debe ingresar un polinomio ecuación válido para $$F(x)$$" />
         <div style="height: 20px" />
         <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true"
                    StartIcon="@Icons.Material.Filled.Calculate" OnClick="@Calculate">Calcular</MudButton>
@@ -37,27 +36,23 @@
 @if (Solution is { } sol)
 {
     <MudPaper Class="pa-4">
-        <h5>Teniendo los siguientes polinomios en Z(^2)</h5>
-        <p>@sol.Hx</p>
-        <p>@sol.Dx</p>
+        <h5>Teniendo los siguientes polinomios en $$\mathbb{Z}_2$$</h5>
+        <p>@sol.Hx.ToLatexString()</p>
+        <p>@sol.Dx.ToLatexString()</p>
         <h5>Calcular</h5>
-        <p>D(x)=gcd(G(x), H(x), S(x) y T(x)</p>
-        @foreach (string step in sol.Steps)
+        <p>$$D(x)=gcd(G(x)$$ , $$H(x)$$ , $$S(x)$$ , $$T(x)$$</p>
+        @foreach (Step stepBlock in sol.Steps)
         {
-            MarkupString ms = (MarkupString)step;
-            <p>@ms</p>
+            <div class="step-block">
+                @foreach (MarkupString step in stepBlock)
+                {
+                    <p>@step</p>
+                }
+                <span class="badge">@stepBlock.GetNumber()</span>
+            </div>
         }
-        <MudCard Class="pa-5" Elevation="5" Style="background-color: aliceblue">
-            <MudCardHeader>
-                <h5>Resultado</h5>
-            </MudCardHeader>
-            <p>@sol.Dx</p>
-            <p>@sol.Hx</p>
-            <p>@sol.Sx</p>
-            <p>@sol.Tx</p>
-        </MudCard>
-
     </MudPaper>
+    <div style="height: 20vh"></div>
 }
 
 
