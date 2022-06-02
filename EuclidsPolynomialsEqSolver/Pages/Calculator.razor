@@ -2,13 +2,10 @@
 @page "/calculator"
 @using DocumentFormat.OpenXml.Bibliography
 
-<style>
-    p {
-        font-size: 16px;
-    }
-</style>
+
 <PageTitle>Calculator</PageTitle>
 
+<h4>Algoritmo extendido de Euclides para polinomios de orden Z(^2)</h4>
 
 <MudPaper Class="pa-4">
     <MudForm @bind-IsValid="@isValid" @ref="form">
@@ -44,7 +41,7 @@
         <p>@sol.Hx</p>
         <p>@sol.Dx</p>
         <h5>Calcular</h5>
-        <p>d(x)=gcd(g(x), h(x), s(x) y t(x)</p>
+        <p>D(x)=gcd(G(x), H(x), S(x) y T(x)</p>
         @foreach (string step in sol.Steps)
         {
             MarkupString ms = (MarkupString)step;

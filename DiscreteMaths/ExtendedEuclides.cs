@@ -49,18 +49,18 @@
                 PolynomialEq rx = qxDiv.Remainder.Mod().SetLetter('r');
                 AddBoldSteps("Resultado de la división:", qx.ToString(), "Resusido de la división:", rx.ToString());
                 //10
-                AddBoldSteps("Hacemos a sx=(s2 - qx * s1)", $"sx=({s2}-({qx}*{s1}))");
+                AddBoldSteps("Hacemos a sx=(s2 - Q(x) * s1)", $"S(x)=({s2.ToString(false)}-({qx.ToString(false)}*{s1.ToString(false)}))");
                 PolynomialEq sx = (s2 - (qx * s1)).Mod().SetLetter('s');
                 AddSteps(sx.ToString());
                 PolynomialEq tx = (t2 - (qx * t1)).Mod().SetLetter('t');
-                AddBoldSteps("Hacemos a tx=(s2 - qx * s1)", $"tx=({t2}-({qx}*{t1}))");
+                AddBoldSteps("Hacemos a T(x)=(s2 - qx * s1)", $"T(x)=({t2}-({qx}*{t1}))");
                 //11
-                AddBoldSteps("Hacemos a gx = hx y hx = rx");
+                AddBoldSteps("Hacemos a G(x) = H(x) y H(x) = R(x)");
                 gx = hx.Clone().SetLetter('g');
                 hx = rx.Clone().SetLetter('h');
                 AddSteps(gx.ToString(), hx.ToString());
                 //12
-                AddBoldSteps("Hacemos a s2 = s1 , s1=sx, t2=t1, t1 = tx");
+                AddBoldSteps("Hacemos a s2 = s1 , s1=S(x), t2=t1, t1 = T(x)");
                 s2 = s1.Clone().SetLetter("s2");
                 s1 = sx.Clone().SetLetter("s1");
                 t2 = t1.Clone().SetLetter("t2");

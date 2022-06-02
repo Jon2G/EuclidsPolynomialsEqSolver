@@ -6,8 +6,17 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">MISTI</a>
+        <div class="top-row row">
+            <div class="col" style="text-align: left">
+                <MudImage Height="50" Src="/imgs/ipn.png"></MudImage>
+            </div>
+            <div class="col" style="text-align: center">
+                <MudImage Height="50" Src="/imgs/misti.png"></MudImage>
+            </div>
+            <div class="col" style="text-align: right">
+                <MudImage Height="50" Src="/imgs/logoesime.png"></MudImage>
+            </div>
+
         </div>
 
         <MudMainContent>
@@ -15,11 +24,15 @@
                 @Body
             </MudContainer>
         </MudMainContent>
-@*        <article class="content px-4">
-            @Body
+        
+        <footer class="footer">
+            <p>Jonathan Eduardo García García - 2022</p>
+        </footer>
+        @*        <article class="content px-4">
+        @Body
         </article>*@
     </main>
-    <MudThemeProvider/>
-    <MudDialogProvider/>
-    <MudSnackbarProvider/>
+    <MudThemeProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
 </div>

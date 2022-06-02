@@ -30,7 +30,7 @@ namespace DiscreteMaths
         public PolynomialEq SetLetter(char letter) => this.SetLetter(letter.ToString());
         public PolynomialEq SetLetter(string letter)
         {
-            Letter = letter;
+            Letter = letter.ToUpper();
             return this;
         }
 
