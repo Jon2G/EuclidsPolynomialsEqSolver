@@ -132,7 +132,7 @@ namespace DiscreteMaths
             for (var index = 0; index < Count; index++)
             {
                 XTerm term = this[index];
-                int mod = Modulus.Mod(term.Value, 2);
+                int mod = Kit.Security.Encryption.Modulus.Mod(term.Value, 2);
                 if (mod == 0)
                 {
                     RemoveAt(index);
