@@ -205,12 +205,12 @@
     }
 
 
-    private async Task Clear()
+    private void Clear()
     {
         this.gx = new PolynomialEq('g');
         this.hx = new PolynomialEq('h');
         Solution = null;
-        await form.Validate();
+        form.Validate().SafeFireAndForget();
     }
     private async Task Calculate()
     {
@@ -225,6 +225,8 @@
 
     private void SetSample(Tuple<PolynomialEq, PolynomialEq> sample)
     {
+        Clear();
+        form.Reset();
         this.gx = sample.Item1.Clone();
         this.hx = sample.Item2.Clone();
         RefreshPolynoms();
