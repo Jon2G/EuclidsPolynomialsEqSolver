@@ -60,9 +60,14 @@
                     break;
                 default:
                     {
+                        string textExponent = Exponent.ToString();
+                        if (textExponent.Length > 1)
+                        {
+                            textExponent = $"{{{textExponent}}}";
+                        }
                         if (Unitary)
                         {
-                            text = $"x^{{{Exponent}}}";
+                            text = $"x^{textExponent}";
                         }
                         else if (Exponent == 1)
                         {
@@ -70,7 +75,7 @@
                         }
                         else
                         {
-                            text = $"{Math.Abs(Value)}x^{{{Exponent}}}";
+                            text = $"{Math.Abs(Value)}x^{textExponent}";
                         }
                         break;
                     }

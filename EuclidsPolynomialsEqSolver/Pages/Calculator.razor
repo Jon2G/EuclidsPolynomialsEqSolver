@@ -1,6 +1,7 @@
 ﻿@page "/"
 @page "/calculator"
 @inherits MathJaxBlazor.MathJaxContentComponent
+@inject IJSRuntime JsRuntime
 
 <PageTitle>Calculator</PageTitle>
 
@@ -33,12 +34,21 @@
 
     </MudForm>
 </MudPaper>
-@if (Solution is { } sol)
-{
-    <MudPaper Class="pa-4">
-        <h5>Teniendo los siguientes polinomios en $$\mathbb{Z}_2$$</h5>
-        <p>@sol.Hx.ToLatexString()</p>
-        <p>@sol.Dx.ToLatexString()</p>
+<div style="height: 3vh"></div>
+<h5>Teniendo los siguientes polinomios en $$\mathbb{Z}_2$$</h5>
+<div>
+    <p id="gx"></p>
+</div>
+
+<div>
+    <p id="hx"></p>
+</div>
+
+<div style="height: 3vh"></div>
+
+<div>
+    @if (Solution is { } sol)
+    {
         <h5>Calcular</h5>
         <p>$$D(x)=gcd(G(x)$$ , $$H(x)$$ , $$S(x)$$ , $$T(x)$$</p>
         @foreach (Step stepBlock in sol.Steps)
@@ -51,9 +61,11 @@
                 <span class="badge">@stepBlock.GetNumber()</span>
             </div>
         }
-    </MudPaper>
-    <div style="height: 20vh"></div>
-}
+    }
+</div>
+
+<div style="height: 20vh"></div>
+
 
 
 
@@ -88,6 +100,7 @@
             {
                 gx = eq.SetLetter('g');
             }
+            JsRuntime.InvokeVoidAsync("setPText", "gx",  gx.ToLatexString().Value);
         }
     }
     string Hx
@@ -100,6 +113,8 @@
             {
                 hx = eq.SetLetter('h');
             }
+            StateHasChanged();
+            JsRuntime.InvokeVoidAsync("setPText", "hx",  hx.ToLatexString().Value);
         }
     }
 
@@ -132,6 +147,16 @@
         }
         Solution = new ExtendedEuclides(gx, hx);
         Solution.Solve();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            JsRuntime.InvokeVoidAsync("setPText", "gx", gx.ToLatexString().Value);
+            JsRuntime.InvokeVoidAsync("setPText", "hx", hx.ToLatexString().Value);
+        }
     }
 
 }

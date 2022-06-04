@@ -13,9 +13,9 @@ namespace DiscreteMaths
         public bool IsNotZero => !IsZero;
         public bool IsZero => this.All(x => x.IsZero);
 
-        public static readonly Regex EquationExpression = new Regex(@"(?<Equation>(?<NumericTerm>(?<Sign>\+|\-)(?<Value>\d+))|(?<XTerm>(?<Sign>\+|\-)?(?<Value>\d)?x(\^(?<Exponent>\d+))?))+");
+        public static readonly Regex EquationExpression = new Regex(@"(?<Equation>(?<NumericTerm>(?<Sign>\+|\-)(?<Value>\d+))|(?<XTerm>(?<Sign>\+|\-)?(?<Value>\d)?x(\^\{?(?<Exponent>\d+)\}?)?))+");
         public static readonly Regex NumericTermExpression = new Regex(@"(?<NumericTerm>(?<Sign>\+|\-)(?<Value>\d+))");
-        public static readonly Regex XTermExpression = new Regex(@"(?<XTerm>(?<Sign>\+|\-)?(?<Value>\d)?x(\^(?<Exponent>\d+))?)");
+        public static readonly Regex XTermExpression = new Regex(@"(?<XTerm>(?<Sign>\+|\-)?(?<Value>\d)?x(\^\{?(?<Exponent>\d+)\}?)?)");
 
         public PolynomialEq(string letter, params XTerm[] xTerms)
         {
@@ -68,6 +68,8 @@ namespace DiscreteMaths
                         }
                         i--;
                         j--;
+                        if (i < -1) i = 0;
+                        if (j < -1) j = 0;
                         op1.Remove(term1);
                         op2.Remove(term2);
                     }
