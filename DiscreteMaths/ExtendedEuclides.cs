@@ -79,10 +79,10 @@ namespace DiscreteMaths
                 AddSteps(gx.ToLatexString(), hx.ToLatexString());
                 //12
                 AddBoldSteps("Hacemos a $$S_2 = S_1$$ , $$S_1 = S(x)$$ , $$T_2 = T_1$$ , $$T_1 = T(x)$$");
-                s2 = s1.Clone().SetLetter("s2");
-                s1 = sx.Clone().SetLetter("s1");
-                t2 = t1.Clone().SetLetter("t2");
-                t1 = tx.Clone().SetLetter("t1");
+                s2 = s1.Clone().SetLetter("s_2");
+                s1 = sx.Clone().SetLetter("s_1");
+                t2 = t1.Clone().SetLetter("t_2");
+                t1 = tx.Clone().SetLetter("t_1");
                 AddSteps(s2.ToLatexString(), s1.ToLatexString(), t2.ToLatexString(), t1.ToLatexString());
             }
             AddBoldSteps($"{hx} es cero por lo tanto hemos terminado ...");

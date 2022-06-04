@@ -1,39 +1,71 @@
 ﻿@page "/"
 @page "/calculator"
+@using AsyncAwaitBestPractices
 @inherits MathJaxBlazor.MathJaxContentComponent
 @inject IJSRuntime JsRuntime
 
 <PageTitle>Calculator</PageTitle>
 
 <h4>Algoritmo extendido de Euclides para polinomios de orden $$\mathbb{Z}_2$$</h4>
+<style scoped>
+    .mud-container-maxwidth-md {
+        max-width: unset !important;
+    }
+</style>
+<div class="row" style="width: 100%">
+    <div class="col-9">
+        <MudPaper Class="pa-4">
+            <MudForm @bind-IsValid="@isValid" @ref="form">
 
-<MudPaper Class="pa-4">
-    <MudForm @bind-IsValid="@isValid" @ref="form">
+                <MudTextField T="string" Label="$$G(x)$$"
+                              Required="true"
+                              @bind-Value="Gx"
+                              Placeholder="x^10 + 2x^1 + 1 + ..."
+                              Variant="Variant.Outlined"
+                              Validation="@(new Func<string, IEnumerable<string>>(ValidatePolynom))"
+                              RequiredError="Debe ingresar un polinomio ecuación válido para $$G(x)$$" />
 
-        <MudTextField T="string" Label="$$G(x)$$"
-                      Required="true"
-                      @bind-Value="Gx"
-                      Placeholder="x^10 + 2x^1 + 1 + ..."
-                      Variant="Variant.Outlined"
-                      Validation="@(new Func<string, IEnumerable<string>>(ValidatePolynom))"
-                      RequiredError="Debe ingresar un polinomio ecuación válido para $$G(x)$$" />
+                <MudTextField T="string" Label="$$F(x)$$"
+                              Required="true"
+                              @bind-Value="Hx"
+                              Placeholder="x^10 + 2x^1 + 1 + ..."
+                              Variant="Variant.Outlined"
+                              Validation="@(new Func<string, IEnumerable<string>>(ValidatePolynom))"
+                              RequiredError="Debe ingresar un polinomio ecuación válido para $$F(x)$$" />
+                <div style="height: 20px" />
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true"
+                           StartIcon="@Icons.Material.Filled.Calculate" OnClick="@Calculate">Calcular</MudButton>
+                <MudButton Variant="Variant.Filled" DisableElevation="true"
+                           OnClick="@Clear"
+                           StartIcon="@Icons.Material.Filled.RestoreFromTrash">Limpiar</MudButton>
 
-        <MudTextField T="string" Label="$$F(x)$$"
-                      Required="true"
-                      @bind-Value="Hx"
-                      Placeholder="x^10 + 2x^1 + 1 + ..."
-                      Variant="Variant.Outlined"
-                      Validation="@(new Func<string, IEnumerable<string>>(ValidatePolynom))"
-                      RequiredError="Debe ingresar un polinomio ecuación válido para $$F(x)$$" />
-        <div style="height: 20px" />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true"
-                   StartIcon="@Icons.Material.Filled.Calculate" OnClick="@Calculate">Calcular</MudButton>
-        <MudButton Variant="Variant.Filled" DisableElevation="true"
-                   OnClick="@Clear"
-                   StartIcon="@Icons.Material.Filled.RestoreFromTrash">Limpiar</MudButton>
+            </MudForm>
+        </MudPaper>
+    </div>
+    <div class="col-3">
+        <h5>Ejemplos</h5>
+        @{
+            RenderActions = new List<Action>();
+            int i = 1;
+            foreach (Tuple<PolynomialEq, PolynomialEq> sample in Samples)
+            {
+                string gxId = $"samplegx{i++}";
+                string hxId = $"samplehx{i++}";
+                <MudPaper Class="pa-4">
+                    <p id="@gxId"></p>
+                    <p id="@hxId"></p>
+                    <MudButton Variant="Variant.Filled" DisableElevation="true"
+                       OnClick="@(()=>SetSample(sample))"
+                       StartIcon="@Icons.Material.Filled.Star">Mostrar</MudButton>
+                </MudPaper>
+                <div style="height: 3vh"></div>
+                RenderActions.Add(()=>JsRuntime.InvokeVoidAsync("setPText", gxId, sample.Item1.ToLatexString().Value).SafeFireAndForget());
+                RenderActions.Add(()=>JsRuntime.InvokeVoidAsync("setPText", hxId, sample.Item2.ToLatexString().Value).SafeFireAndForget());
+            }
+        }
+    </div>
+</div>
 
-    </MudForm>
-</MudPaper>
 <div style="height: 3vh"></div>
 <h5>Teniendo los siguientes polinomios en $$\mathbb{Z}_2$$</h5>
 <div>
@@ -70,7 +102,7 @@
 
 
 @code {
-
+    private List<Action> RenderActions;
     PolynomialEq gx { get; set; } = new PolynomialEq('g',
         new XTerm(10),
         new XTerm(9),
@@ -88,6 +120,48 @@
         new XTerm(2),
         XTerm.One);
 
+    public readonly Tuple<PolynomialEq, PolynomialEq>[] Samples = new[]
+    {
+        new Tuple<PolynomialEq, PolynomialEq>(new PolynomialEq("G",
+            new XTerm(10),
+            new XTerm(9),
+            new XTerm(8),
+            new XTerm(6),
+            new XTerm(5),
+            new XTerm(4),
+            XTerm.One
+            ),new PolynomialEq("H",
+                new XTerm(9),
+                new XTerm(6),
+                new XTerm(5),
+                new XTerm(3),
+                new XTerm(2),
+                XTerm.One)),
+        new Tuple<PolynomialEq, PolynomialEq>(new PolynomialEq("G",
+            new XTerm(12),
+            new XTerm(9),
+            new XTerm(8),
+            new XTerm(6),
+            new XTerm(5),
+            new XTerm(4),
+            XTerm.One
+            ),new PolynomialEq("H",
+                new XTerm(8),
+                new XTerm(6),
+                new XTerm(5),
+                new XTerm(3),
+                new XTerm(2),
+                XTerm.One)),
+        new Tuple<PolynomialEq,
+            PolynomialEq>(new PolynomialEq("G",
+            new XTerm(2,3),
+            new XTerm(1,4),
+            new XTerm(0,1)),
+                new PolynomialEq("H",
+                    new XTerm(1,3),
+                    XTerm.One)),
+    };
+
     ExtendedEuclides? Solution;
 
     string Gx
@@ -100,7 +174,7 @@
             {
                 gx = eq.SetLetter('g');
             }
-            JsRuntime.InvokeVoidAsync("setPText", "gx",  gx.ToLatexString().Value);
+            JsRuntime.InvokeVoidAsync("setPText", "gx", gx.ToLatexString().Value).SafeFireAndForget();
         }
     }
     string Hx
@@ -114,7 +188,7 @@
                 hx = eq.SetLetter('h');
             }
             StateHasChanged();
-            JsRuntime.InvokeVoidAsync("setPText", "hx",  hx.ToLatexString().Value);
+            JsRuntime.InvokeVoidAsync("setPText", "hx", hx.ToLatexString().Value).SafeFireAndForget();
         }
     }
 
@@ -149,13 +223,26 @@
         Solution.Solve();
     }
 
+    private void SetSample(Tuple<PolynomialEq, PolynomialEq> sample)
+    {
+        this.gx = sample.Item1.Clone();
+        this.hx = sample.Item2.Clone();
+        RefreshPolynoms();
+    }
+
+    private void RefreshPolynoms()
+    {
+        JsRuntime.InvokeVoidAsync("setPText", "gx", gx.ToLatexString().Value).SafeFireAndForget();
+        JsRuntime.InvokeVoidAsync("setPText", "hx", hx.ToLatexString().Value).SafeFireAndForget();
+    }
+
     protected override void OnAfterRender(bool firstRender)
     {
+        RenderActions.ForEach(t => t.Invoke());
         base.OnAfterRender(firstRender);
         if (firstRender)
         {
-            JsRuntime.InvokeVoidAsync("setPText", "gx", gx.ToLatexString().Value);
-            JsRuntime.InvokeVoidAsync("setPText", "hx", hx.ToLatexString().Value);
+            RefreshPolynoms();
         }
     }
 

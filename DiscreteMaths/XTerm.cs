@@ -1,6 +1,8 @@
-﻿namespace DiscreteMaths
+﻿using Kit;
+
+namespace DiscreteMaths
 {
-    public class XTerm : IEquatable<XTerm>, IComparable, IComparable<XTerm>
+    public class XTerm : IEquatable<XTerm>, IComparable, IComparable<XTerm>, ICloneable<XTerm>
     {
         public int Exponent { get; set; }
         public int Value { get; set; }
@@ -88,5 +90,12 @@
         {
             throw new NotImplementedException();
         }
+
+        public XTerm Clone()
+        {
+            return new XTerm(this.Exponent, this.Value);
+        }
+
+        object ICloneable.Clone() => Clone();
     }
 }

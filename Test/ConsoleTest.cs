@@ -14,8 +14,18 @@ namespace EuclidsPolynomialsEqSolver
 
         public static void Run2()
         {
-            PolynomialEq.Parse("x^12+x^9+x^8+x^6+x^5+x^4+1", out PolynomialEq gx);
-            PolynomialEq.Parse("x^ 8+ x^6+x^ 5+x ^3 +x^ 2+1", out PolynomialEq hx);
+            //1 
+            //x^{10} + x^9 + x^8 + x^6 + x^5 + x^4 + 1
+            //x^9 + x^6 + x^5 + x^3 + x^2 + 1
+            //2
+            //x^12+x^9+x^8+x^6+x^5+x^4+1
+            //x^ 8+ x^6+x^ 5+x ^3 +x^ 2+1
+            //3
+            //3x^2+4x-2
+            //3x+1
+
+            PolynomialEq.Parse("3x^2+4x-2", out PolynomialEq gx);
+            PolynomialEq.Parse("3x+1", out PolynomialEq hx);
 
 
             ExtendedEuclides solution = new ExtendedEuclides(gx, hx);

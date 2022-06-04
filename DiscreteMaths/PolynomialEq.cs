@@ -13,9 +13,9 @@ namespace DiscreteMaths
         public bool IsNotZero => !IsZero;
         public bool IsZero => this.All(x => x.IsZero);
 
-        public static readonly Regex EquationExpression = new Regex(@"(?<Equation>(?<NumericTerm>(?<Sign>\+|\-)(?<Value>\d+))|(?<XTerm>(?<Sign>\+|\-)?(?<Value>\d)?x(\^\{?(?<Exponent>\d+)\}?)?))+");
-        public static readonly Regex NumericTermExpression = new Regex(@"(?<NumericTerm>(?<Sign>\+|\-)(?<Value>\d+))");
-        public static readonly Regex XTermExpression = new Regex(@"(?<XTerm>(?<Sign>\+|\-)?(?<Value>\d)?x(\^\{?(?<Exponent>\d+)\}?)?)");
+        public static readonly Regex EquationExpression = new Regex(@"(?<Equation>(?<XTerm> ?(?<Sign>\+|\-)? ?(?<Value>\d)?x(\^\{?(?<Exponent>\d+)\}?)?)|(?<NumericTerm> ?(?<Sign>\+|\-) ?(?<Value>\d+)))+");
+        public static readonly Regex NumericTermExpression = new Regex(@"(?<NumericTerm> ?(?<Sign>\+|\-) ?(?<Value>\d+))");
+        public static readonly Regex XTermExpression = new Regex(@"(?<XTerm> ?(?<Sign>\+|\-)? ?(?<Value>\d)?x(\^\{?(?<Exponent>\d+)\}?)?)");
 
         public PolynomialEq(string letter, params XTerm[] xTerms)
         {
@@ -50,7 +50,7 @@ namespace DiscreteMaths
             }
             if (!op)
             {
-                eq2 = !eq2;
+                op2 = !op2;
             }
             PolynomialEq result = new PolynomialEq('r');
             for (var i = 0; i < op1.Count; i++)
@@ -222,7 +222,7 @@ namespace DiscreteMaths
         public MarkupString ToLatexString(bool addLetter = true) => (MarkupString)$"$${ToString(addLetter)}$$";
         public PolynomialEq Clone()
         {
-            return new PolynomialEq(this.Letter, this.ToArray());
+            return new PolynomialEq(this.Letter, this.Select(x => x.Clone()).ToArray());
         }
 
         object ICloneable.Clone() => this.Clone();
@@ -240,12 +240,11 @@ namespace DiscreteMaths
             Group equationGroup = match.Groups["Equation"];
             foreach (Capture capture in equationGroup.Captures)
             {
+                string captureValue = capture.Value.Trim();
                 int numericValue = 1;
                 int exponent = 0;
-                match = NumericTermExpression.Match(capture.Value);
-
-                Group s, v;
-
+                match = XTermExpression.Match(captureValue);
+                Group v;
                 if (match.Success)
                 {
                     v = match.Groups["Value"];
@@ -253,24 +252,25 @@ namespace DiscreteMaths
                     {
                         numericValue = int.Parse(v.Value);
                     }
-                }
-                else
-                {
-                    match = XTermExpression.Match(capture.Value);
-                    if (!match.Success) return false;
 
-                    v = match.Groups["Value"];
-                    if (!string.IsNullOrEmpty(v.Value))
-                    {
-                        numericValue = int.Parse(v.Value);
-                    }
+                    exponent = 1;
                     var e = match.Groups["Exponent"];
                     if (!string.IsNullOrEmpty(e.Value))
                     {
                         exponent = int.Parse(e.Value);
                     }
                 }
-                s = match.Groups["Sign"];
+                else
+                {
+                    match = NumericTermExpression.Match(captureValue);
+                    if (!match.Success) return false;
+                    v = match.Groups["Value"];
+                    if (!string.IsNullOrEmpty(v.Value))
+                    {
+                        numericValue = int.Parse(v.Value);
+                    }
+                }
+                Group s = match.Groups["Sign"];
                 if (s.Value == "-")
                 {
                     numericValue = -1 * numericValue;
